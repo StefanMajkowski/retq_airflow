@@ -1,0 +1,16 @@
+{
+    "tables": [
+        {
+            "source_table": "example_table",
+            "bq_dataset": "your_dataset",
+            "bq_table": "example_table",
+            "type_mapping": {
+                "id": "int64",
+                "name": "string",
+                "created_at": "datetime64[ns]",
+                "amount": "float64",
+                "is_active": "bool"
+            }
+        }
+    ]
+} 
