@@ -2,13 +2,16 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.google.cloud.hooks.bigquery import BigQueryHook
-from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 import pandas as pd
 import logging
 from typing import Dict, List, Optional
 import json
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'credentials', '.env'))
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -36,15 +39,15 @@ dag = DAG(
 
 def get_postgres_connection() -> PostgresHook:
     """
-    Get PostgreSQL connection using Airflow connection
+    Get PostgreSQL connection using environment variables
     """
     try:
-        # Get connection details from Airflow variables
-        pg_host = Variable.get('postgres_host')
-        pg_schema = Variable.get('postgres_schema')
-        pg_user = Variable.get('postgres_user')
-        pg_password = Variable.get('postgres_password')
-        pg_port = Variable.get('postgres_port', default_var='5432')
+        # Get connection details from environment variables
+        pg_host = os.getenv('POSTGRES_HOST')
+        pg_schema = os.getenv('POSTGRES_SCHEMA')
+        pg_user = os.getenv('POSTGRES_USER')
+        pg_password = os.getenv('POSTGRES_PASSWORD')
+        pg_port = os.getenv('POSTGRES_PORT', '5432')
 
         # Create connection using PostgresHook
         return PostgresHook(
@@ -61,11 +64,11 @@ def get_postgres_connection() -> PostgresHook:
 
 def get_bigquery_connection() -> BigQueryHook:
     """
-    Get BigQuery connection using Airflow connection
+    Get BigQuery connection using environment variables
     """
     try:
-        # Get GCP project ID from Airflow variables
-        project_id = Variable.get('gcp_project_id')
+        # Get GCP project ID from environment variables
+        project_id = os.getenv('GCP_PROJECT_ID')
         
         # Create connection using BigQueryHook
         return BigQueryHook(
@@ -79,15 +82,15 @@ def get_bigquery_connection() -> BigQueryHook:
 
 def get_table_config() -> Dict:
     """
-    Get table configuration from Airflow variables
+    Get table configuration from environment variables
     """
     try:
-        # First try to get from Airflow variables
-        config = Variable.get('postgres_to_bigquery_config', deserialize_json=True)
+        # Get configuration from environment variables
+        config = json.loads(os.getenv('POSTGRES_TO_BIGQUERY_CONFIG', '{}'))
         if config:
             return config
         
-        # If not in variables, try to read from file
+        # If not in environment variables, try to read from file
         config_path = os.path.join(os.path.dirname(__file__), 'config', 'postgres_to_bigquery_config.json')
         with open(config_path, 'r') as f:
             return json.load(f)
