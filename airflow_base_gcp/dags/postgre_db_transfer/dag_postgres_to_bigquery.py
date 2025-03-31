@@ -8,10 +8,13 @@ import logging
 from typing import Dict, List, Optional
 import json
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path=os.getenv("AIRFLOW_ENV_PATH"))
+# Point to your real .env location
+env_path = Path("/home/stefan_majk2/retq_airflow/airflow_base_gcp/credentials/.env")
+load_dotenv(dotenv_path=env_path)
 print("Connecting with:")
 print("HOST =", os.getenv("POSTGRES_HOST"))
 print("USER =", os.getenv("POSTGRES_USER"))
