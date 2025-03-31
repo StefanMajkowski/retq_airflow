@@ -11,7 +11,7 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'credentials', '.env'))
+load_dotenv(dotenv_path=os.getenv("AIRFLOW_ENV_PATH"))
 
 # Configure logging
 logger = logging.getLogger(__name__)
