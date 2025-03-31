@@ -12,7 +12,10 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path=os.getenv("AIRFLOW_ENV_PATH"))
-
+print("Connecting with:")
+print("HOST =", os.getenv("POSTGRES_HOST"))
+print("USER =", os.getenv("POSTGRES_USER"))
+print("PORT =", os.getenv("POSTGRES_PORT"))
 # Configure logging
 logger = logging.getLogger(__name__)
 
