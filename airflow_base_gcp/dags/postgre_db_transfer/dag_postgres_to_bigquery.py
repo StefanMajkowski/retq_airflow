@@ -8,19 +8,22 @@ import logging
 from typing import Dict, List, Optional
 import json
 import os
-from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-# Point to your real .env location
-env_path = Path("/home/stefan_majk2/retq_airflow/airflow_base_gcp/credentials/.env")
-load_dotenv(dotenv_path=env_path)
-print("Connecting with:")
-print("HOST =", os.getenv("POSTGRES_HOST"))
-print("USER =", os.getenv("POSTGRES_USER"))
-print("PORT =", os.getenv("POSTGRES_PORT"))
 # Configure logging
 logger = logging.getLogger(__name__)
+
+# Load environment variables from .env file
+env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'credentials', '.env')
+logger.info(f"Loading environment variables from: {env_path}")
+load_dotenv(env_path)
+
+# Log environment variables (without sensitive values)
+logger.info(f"POSTGRES_HOST: {os.getenv('POSTGRES_HOST')}")
+logger.info(f"POSTGRES_SCHEMA: {os.getenv('POSTGRES_SCHEMA')}")
+logger.info(f"POSTGRES_USER: {os.getenv('POSTGRES_USER')}")
+logger.info(f"POSTGRES_PORT: {os.getenv('POSTGRES_PORT')}")
+logger.info(f"GCP_PROJECT_ID: {os.getenv('GCP_PROJECT_ID')}")
 
 # Default arguments for the DAG
 default_args = {
@@ -55,6 +58,17 @@ def get_postgres_connection() -> PostgresHook:
         pg_password = os.getenv('POSTGRES_PASSWORD')
         pg_port = os.getenv('POSTGRES_PORT', '5432')
 
+        # Validate required environment variables
+        if not all([pg_host, pg_schema, pg_user, pg_password]):
+            missing_vars = []
+            if not pg_host: missing_vars.append('POSTGRES_HOST')
+            if not pg_schema: missing_vars.append('POSTGRES_SCHEMA')
+            if not pg_user: missing_vars.append('POSTGRES_USER')
+            if not pg_password: missing_vars.append('POSTGRES_PASSWORD')
+            raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
+
+        logger.info(f"Attempting to connect to PostgreSQL at {pg_host}:{pg_port}")
+        
         # Create connection using PostgresHook
         return PostgresHook(
             postgres_conn_id='postgres_default',
