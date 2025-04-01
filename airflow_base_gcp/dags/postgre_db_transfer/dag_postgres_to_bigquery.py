@@ -54,11 +54,11 @@ def get_postgres_connection():
     """
     try:
         # Get connection details from environment variables
-        pg_host = 'pg.pg4e.com'
-        pg_schema = 'public'
-        pg_user = 'pg4e'
-        pg_password = 'pg4e'
-        pg_port = '5432'
+        pg_host = os.getenv('POSTGRES_HOST')
+        pg_schema = os.getenv('POSTGRES_SCHEMA')
+        pg_user = os.getenv('POSTGRES_USER')
+        pg_password = os.getenv('POSTGRES_PASSWORD')
+        pg_port = os.getenv('POSTGRES_PORT', '5432')
 
         logger.info(f"Attempting to connect to PostgreSQL at {pg_host}:{pg_port}")
         
