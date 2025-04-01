@@ -52,11 +52,11 @@ def get_postgres_connection() -> PostgresHook:
     """
     try:
         # Get connection details from environment variables
-        pg_host = os.getenv('POSTGRES_HOST')
-        pg_schema = os.getenv('POSTGRES_SCHEMA')
-        pg_user = os.getenv('POSTGRES_USER')
-        pg_password = os.getenv('POSTGRES_PASSWORD')
-        pg_port = os.getenv('POSTGRES_PORT', '5432')
+        pg_host = 'pg.pg4e.com'
+        pg_schema = 'public'
+        pg_user = 'pg4e'
+        pg_password = 'pg4e'
+        pg_port = '5432'
 
         # Validate required environment variables
         if not all([pg_host, pg_schema, pg_user, pg_password]):
@@ -72,11 +72,11 @@ def get_postgres_connection() -> PostgresHook:
         # Create connection using PostgresHook
         return PostgresHook(
             postgres_conn_id='postgres_default',
-            host=pg_host,
-            database=pg_schema,
-            user=pg_user,
-            password=pg_password,
-            port=pg_port
+            host='pg.pg4e.com',
+            database='public',
+            user='pg4e',
+            password='pg4e',
+            port='5432'
         )
     except Exception as e:
         logger.error(f"Failed to establish PostgreSQL connection: {str(e)}")
