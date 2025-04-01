@@ -9,6 +9,8 @@ from typing import Dict, List, Optional
 import json
 import os
 from dotenv import load_dotenv
+import psycopg2
+from sqlalchemy import create_engine
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -46,9 +48,9 @@ dag = DAG(
     tags=['postgres', 'bigquery', 'data_transfer'],
 )
 
-def get_postgres_connection() -> PostgresHook:
+def get_postgres_connection():
     """
-    Get PostgreSQL connection using environment variables
+    Get PostgreSQL connection using direct psycopg2 connection
     """
     try:
         # Get connection details from environment variables
@@ -60,21 +62,18 @@ def get_postgres_connection() -> PostgresHook:
 
         logger.info(f"Attempting to connect to PostgreSQL at {pg_host}:{pg_port}")
         
-        # Create connection using PostgresHook with direct connection parameters
-        hook = PostgresHook(
-            conn_id='postgres_default',  # Use a dummy connection ID
-            conn_type='postgres',
-            host=pg_host,
-            database=pg_schema,
-            user=pg_user,
-            password=pg_password,
-            port=pg_port
-        )
+        # Create connection string for SQLAlchemy
+        connection_string = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_schema}"
+        
+        # Create SQLAlchemy engine
+        engine = create_engine(connection_string)
         
         # Test the connection
-        conn = hook.get_conn()
-        logger.info("Successfully established PostgreSQL connection")
-        return hook
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+            logger.info("Successfully established PostgreSQL connection")
+        
+        return engine
         
     except Exception as e:
         logger.error(f"Failed to establish PostgreSQL connection: {str(e)}")
@@ -133,7 +132,7 @@ def extract_data_from_postgres(**context) -> None:
     """
     Extract data from PostgreSQL and store in XCom
     """
-    pg_hook = get_postgres_connection()
+    engine = get_postgres_connection()
     config = get_table_config()
     
     for table_config in config['tables']:
@@ -141,7 +140,7 @@ def extract_data_from_postgres(**context) -> None:
         query = f"SELECT * FROM {table_name}"
         
         try:
-            df = pg_hook.get_pandas_df(query)
+            df = pd.read_sql(query, engine)
             context['task_instance'].xcom_push(key=f'data_{table_name}', value=df)
             logger.info(f"Successfully extracted data from {table_name}")
         except Exception as e:
