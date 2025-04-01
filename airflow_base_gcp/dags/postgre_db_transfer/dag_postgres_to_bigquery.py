@@ -58,25 +58,23 @@ def get_postgres_connection() -> PostgresHook:
         pg_password = 'pg4e'
         pg_port = '5432'
 
-        # Validate required environment variables
-        if not all([pg_host, pg_schema, pg_user, pg_password]):
-            missing_vars = []
-            if not pg_host: missing_vars.append('POSTGRES_HOST')
-            if not pg_schema: missing_vars.append('POSTGRES_SCHEMA')
-            if not pg_user: missing_vars.append('POSTGRES_USER')
-            if not pg_password: missing_vars.append('POSTGRES_PASSWORD')
-            raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
-
         logger.info(f"Attempting to connect to PostgreSQL at {pg_host}:{pg_port}")
         
-        # Create connection using PostgresHook
-        return PostgresHook(
-            host='pg.pg4e.com',
-            database='public',
-            user='pg4e',
-            password='pg4e',
-            port='5432'
+        # Create connection using PostgresHook with direct connection parameters
+        hook = PostgresHook(
+            postgres_conn_id=None,  # Don't use Airflow connection
+            host=pg_host,
+            database=pg_schema,
+            user=pg_user,
+            password=pg_password,
+            port=pg_port
         )
+        
+        # Test the connection
+        conn = hook.get_conn()
+        logger.info("Successfully established PostgreSQL connection")
+        return hook
+        
     except Exception as e:
         logger.error(f"Failed to establish PostgreSQL connection: {str(e)}")
         raise
