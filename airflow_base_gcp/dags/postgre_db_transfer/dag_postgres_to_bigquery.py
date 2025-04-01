@@ -62,7 +62,8 @@ def get_postgres_connection() -> PostgresHook:
         
         # Create connection using PostgresHook with direct connection parameters
         hook = PostgresHook(
-            postgres_conn_id=None,  # Don't use Airflow connection
+            conn_id='postgres_default',  # Use a dummy connection ID
+            conn_type='postgres',
             host=pg_host,
             database=pg_schema,
             user=pg_user,
