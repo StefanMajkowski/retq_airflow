@@ -71,7 +71,6 @@ def get_postgres_connection() -> PostgresHook:
         
         # Create connection using PostgresHook
         return PostgresHook(
-            postgres_conn_id='postgres_default',
             host='pg.pg4e.com',
             database='public',
             user='pg4e',
