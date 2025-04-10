@@ -157,8 +157,8 @@ transfer_task = PythonOperator(
     python_callable=transfer_postgres_to_bigquery,
     op_kwargs={
         'source_table': 'client_profiles',  # Make sure this is the actual table you want to extract from
-        'columns': ['id', 'first_name', 'city', 'created_at', 'updated_at'],  # Adjust these columns to match your table schema
-        'bq_dataset': 'bronze_test',        # Confirm this dataset exists in BigQuery 
+        # Not specifying 'columns' parameter will extract all columns (SELECT *)
+        'bq_dataset': 'bronze',        # Confirm this dataset exists in BigQuery 
         'bq_table': 'client_profiles_test_load'       # This is the destination table name in BigQuery
     },
     dag=dag,
