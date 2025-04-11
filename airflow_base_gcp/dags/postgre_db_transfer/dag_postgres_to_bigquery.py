@@ -158,7 +158,7 @@ transfer_task = PythonOperator(
     op_kwargs={
         'source_table': 'client_profiles',  # Make sure this is the actual table you want to extract from
         # Not specifying 'columns' parameter will extract all columns (SELECT *)
-        'bq_dataset': 'bronze',        # Confirm this dataset exists in BigQuery 
+        'bq_dataset': 'BRONZE',        # Confirm this dataset exists in BigQuery 
         'bq_table': 'raw_client_client_profiles'       # This is the destination table name in BigQuery
     },
     dag=dag,
