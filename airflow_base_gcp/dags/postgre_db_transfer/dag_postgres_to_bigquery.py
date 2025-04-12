@@ -158,20 +158,25 @@ def transfer_multiple_tables(**context):
     # Define the tables to transfer with their configurations
     tables_to_transfer = [
         {
-            'source_table': 'lectures',
+            'source_table': 'client_profiles',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_lectures'
+            'bq_table': 'raw_client_client_profiles'
         },
         {
-            'source_table': 'course_lectures',
+            'source_table': 'teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_course_lectures'
+            'bq_table': 'raw_client_teams'
         },
         {
-            'source_table': 'users',
+            'source_table': 'client_teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_users'
+            'bq_table': 'raw_client_client_teams'
         },
+        {
+            'source_table': 'team_invitations',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_client_team_invitations'
+        }
         # Add more tables as needed
     ]
     
