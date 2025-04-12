@@ -41,7 +41,7 @@ default_args = {
 dag = DAG(
     'postgres_to_bigquery_transfer',
     default_args=default_args,
-    description='Transfer specific table from PostgreSQL to BigQuery',
+    description='Transfer multiple tables from PostgreSQL to BigQuery',
     schedule_interval=None,
     start_date=datetime(2024, 1, 1),
     catchup=False,
@@ -151,17 +151,59 @@ def transfer_postgres_to_bigquery(source_table=None, query=None, columns=None, b
         logger.error(f"Error in transfer process: {str(e)}")
         raise
 
-# Define task for transferring data using a table
-transfer_task = PythonOperator(
-    task_id='transfer_specific_table',
-    python_callable=transfer_postgres_to_bigquery,
-    op_kwargs={
-        'source_table': 'client_profiles',  # Make sure this is the actual table you want to extract from
-        # Not specifying 'columns' parameter will extract all columns (SELECT *)
-        'bq_dataset': 'BRONZE',        # Confirm this dataset exists in BigQuery 
-        'bq_table': 'raw_client_client_profiles'       # This is the destination table name in BigQuery
-    },
-    dag=dag,
-)
+def transfer_multiple_tables(**context):
+    """
+    Transfer multiple tables from PostgreSQL to BigQuery
+    """
+    # Define the tables to transfer with their configurations
+    tables_to_transfer = [
+        {
+            'source_table': 'lectures',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_client_lectures'
+        },
+        {
+            'source_table': 'course_lectures',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_client_course_lectures'
+        },
+        {
+            'source_table': 'users',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_client_users'
+        },
+        # Add more tables as needed
+    ]
+    
+    success_count = 0
+    failure_count = 0
+    
+    # Process each table
+    for table_config in tables_to_transfer:
+        try:
+            logger.info(f"Starting transfer for table: {table_config['source_table']}")
+            transfer_postgres_to_bigquery(**table_config)
+            success_count += 1
+            logger.info(f"Successfully transferred table: {table_config['source_table']}")
+        except Exception as e:
+            failure_count += 1
+            logger.error(f"Failed to transfer table {table_config['source_table']}: {str(e)}")
+            # Continue processing other tables even if one fails
+            continue
+    
+    logger.info(f"Transfer process completed. Successfully transferred {success_count} of {len(tables_to_transfer)} tables.")
+    if failure_count > 0:
+        logger.warning(f"Failed to transfer {failure_count} tables. See logs for details.")
+    
+    return {
+        'success_count': success_count,
+        'failure_count': failure_count,
+        'total_tables': len(tables_to_transfer)
+    }
 
-# No need for multiple tasks - just the one we need 
+# Define task for transferring multiple tables
+multi_table_transfer_task = PythonOperator(
+    task_id='transfer_multiple_tables',
+    python_callable=transfer_multiple_tables,
+    dag=dag,
+) 
