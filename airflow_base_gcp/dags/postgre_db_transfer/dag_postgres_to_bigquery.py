@@ -20,7 +20,7 @@ logger.info(f"Loading environment variables from: {env_path}")
 load_dotenv(env_path)
 
 # Set GCP credentials path - try to use key file if it exists
-gcp_key_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'credentials', 'retentionq-37d37a6c9a9c.json')
+gcp_key_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'credentials', 'decent-genius-449819-r8-d57651c29403.json')
 if os.path.exists(gcp_key_path):
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = gcp_key_path
     logger.info(f"Set GOOGLE_APPLICATION_CREDENTIALS to: {gcp_key_path}")
