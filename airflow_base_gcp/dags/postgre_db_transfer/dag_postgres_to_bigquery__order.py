@@ -39,7 +39,7 @@ default_args = {
 
 # DAG definition
 dag = DAG(
-    'postgres_to_bigquery_transfer',
+    'dag_postgres_to_bigquery__order',
     default_args=default_args,
     description='Transfer multiple tables from PostgreSQL to BigQuery',
     schedule_interval=None,
@@ -160,87 +160,87 @@ def transfer_multiple_tables(**context):
         {
             'source_table': 'client_diets',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_client_diets'
+            'bq_table': 'raw_order__client_diets'
         },
         {
             'source_table': 'client_diet_days',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_client_diet_days'
+            'bq_table': 'raw_order__client_diet_days'
         },
         {
             'source_table': 'client_meal_slots',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_client_meal_slots'
+            'bq_table': 'raw_order__client_meal_slots'
         },
         {
             'source_table': 'addon_client_diet_day',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_addon_client_diet_day'
+            'bq_table': 'raw_order__addon_client_diet_day'
         },
         {
             'source_table': 'addresses',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_addresses'
+            'bq_table': 'raw_order__addresses'
         },
         {
             'source_table': 'carts',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_carts'
+            'bq_table': 'raw_order__carts'
         },
         {
             'source_table': 'cart_items',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_cart_items'
+            'bq_table': 'raw_order__cart_items'
         },
         {
             'source_table': 'cart_diets',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_cart_diets'
+            'bq_table': 'raw_order__cart_diets'
         },
         {
             'source_table': 'cart_diet_days',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_cart_diet_days'
+            'bq_table': 'raw_order__cart_diet_days'
         },
         {
             'source_table': 'cart_meal_slots',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_cart_meal_slots'
+            'bq_table': 'raw_order__cart_meal_slots'
         },
         {
             'source_table': 'diet_orders',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_diet_orders'
+            'bq_table': 'raw_order__diet_orders'
         },
         {
             'source_table': 'diet_order_days',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_diet_order_days'
+            'bq_table': 'raw_order__diet_order_days'
         },
         {
             'source_table': 'orders',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_orders'
+            'bq_table': 'raw_order__orders'
         },
         {
             'source_table': 'order_items',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_order_items'
+            'bq_table': 'raw_order__order_items'
         },
         {
             'source_table': 'payments',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_payments'
+            'bq_table': 'raw_order__payments'
         },
         {
             'source_table': 'payment_methods',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_payment_methods'
+            'bq_table': 'raw_order__payment_methods'
         },
         {
             'source_table': 'addon_cart_diet_day',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_order_addon_cart_diet_day'
+            'bq_table': 'raw_order__addon_cart_diet_day'
         }
            # Add more tables as needed
     ]

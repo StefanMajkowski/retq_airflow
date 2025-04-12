@@ -39,7 +39,7 @@ default_args = {
 
 # DAG definition
 dag = DAG(
-    'postgres_to_bigquery_transfer',
+    'dag_postgres_to_bigquery__dietary',
     default_args=default_args,
     description='Transfer multiple tables from PostgreSQL to BigQuery',
     schedule_interval=None,
@@ -62,7 +62,7 @@ def transfer_postgres_to_bigquery(source_table=None, query=None, columns=None, b
     try:
         # Get postgres connection details
         pg_host = os.getenv('POSTGRES_HOST')
-        pg_database = os.getenv('POSTGRES_DATABASE_AUTH')
+        pg_database = os.getenv('POSTGRES_DATABASE_DIETARY')
         pg_schema = os.getenv('POSTGRES_SCHEMA')
         pg_user = os.getenv('POSTGRES_USER')
         pg_password = os.getenv('POSTGRES_PASSWORD')
@@ -158,31 +158,25 @@ def transfer_multiple_tables(**context):
     # Define the tables to transfer with their configurations
     tables_to_transfer = [
         {
-            'source_table': 'clients',
+            'source_table': 'client_profiles',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_auth_clients'
+            'bq_table': 'raw_client_client_profiles'
         },
         {
-            'source_table': 'employees',
+            'source_table': 'teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_auth_employees'
+            'bq_table': 'raw_client_teams'
         },
         {
-            'source_table': 'sessions',
+            'source_table': 'client_teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_auth_sessions'
+            'bq_table': 'raw_client_client_teams'
         },
         {
-            'source_table': 'socialite_providers',
+            'source_table': 'team_invitations',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_auth_socialite_providers'
-        },
-        {
-            'source_table': 'email_templates',
-            'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_auth_email_templates'
-        },
-        
+            'bq_table': 'raw_client_team_invitations'
+        }
         # Add more tables as needed
     ]
     

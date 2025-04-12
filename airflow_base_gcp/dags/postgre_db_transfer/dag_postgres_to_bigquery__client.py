@@ -39,7 +39,7 @@ default_args = {
 
 # DAG definition
 dag = DAG(
-    'postgres_to_bigquery_transfer',
+    'dag_postgres_to_bigquery__client',
     default_args=default_args,
     description='Transfer multiple tables from PostgreSQL to BigQuery',
     schedule_interval=None,
@@ -160,22 +160,22 @@ def transfer_multiple_tables(**context):
         {
             'source_table': 'client_profiles',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_profiles'
+            'bq_table': 'raw_client__client_profiles'
         },
         {
             'source_table': 'teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_teams'
+            'bq_table': 'raw_client__teams'
         },
         {
             'source_table': 'client_teams',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_teams'
+            'bq_table': 'raw_client__client_teams'
         },
         {
             'source_table': 'team_invitations',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_team_invitations'
+            'bq_table': 'raw_client__team_invitations'
         }
         # Add more tables as needed
     ]

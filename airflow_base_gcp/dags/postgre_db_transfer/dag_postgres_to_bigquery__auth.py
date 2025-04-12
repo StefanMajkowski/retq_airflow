@@ -39,7 +39,7 @@ default_args = {
 
 # DAG definition
 dag = DAG(
-    'postgres_to_bigquery_transfer',
+    'dag_postgres_to_bigquery__auth',
     default_args=default_args,
     description='Transfer multiple tables from PostgreSQL to BigQuery',
     schedule_interval=None,
@@ -62,7 +62,7 @@ def transfer_postgres_to_bigquery(source_table=None, query=None, columns=None, b
     try:
         # Get postgres connection details
         pg_host = os.getenv('POSTGRES_HOST')
-        pg_database = os.getenv('POSTGRES_DATABASE_DIETARY')
+        pg_database = os.getenv('POSTGRES_DATABASE_AUTH')
         pg_schema = os.getenv('POSTGRES_SCHEMA')
         pg_user = os.getenv('POSTGRES_USER')
         pg_password = os.getenv('POSTGRES_PASSWORD')
@@ -158,25 +158,31 @@ def transfer_multiple_tables(**context):
     # Define the tables to transfer with their configurations
     tables_to_transfer = [
         {
-            'source_table': 'client_profiles',
+            'source_table': 'clients',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_profiles'
+            'bq_table': 'raw_auth__clients'
         },
         {
-            'source_table': 'teams',
+            'source_table': 'employees',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_teams'
+            'bq_table': 'raw_auth__employees'
         },
         {
-            'source_table': 'client_teams',
+            'source_table': 'sessions',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_teams'
+            'bq_table': 'raw_auth__sessions'
         },
         {
-            'source_table': 'team_invitations',
+            'source_table': 'socialite_providers',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_team_invitations'
-        }
+            'bq_table': 'raw_auth__socialite_providers'
+        },
+        {
+            'source_table': 'email_templates',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_auth__email_templates'
+        },
+        
         # Add more tables as needed
     ]
     
