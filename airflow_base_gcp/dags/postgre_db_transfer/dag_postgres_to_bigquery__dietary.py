@@ -158,25 +158,41 @@ def transfer_multiple_tables(**context):
     # Define the tables to transfer with their configurations
     tables_to_transfer = [
         {
-            'source_table': 'client_profiles',
+            'source_table': 'dietary_diet_kcals',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_profiles'
+            'bq_table': 'raw_dietary__diet_kcal'
         },
         {
-            'source_table': 'teams',
+            'source_table': 'dietary_diet_meal_types',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_teams'
+            'bq_table': 'raw_dietary__diet_meal_types'
         },
         {
-            'source_table': 'client_teams',
+            'source_table': 'dietary_diets',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_client_teams'
+            'bq_table': 'raw_dietary__diets'
         },
         {
-            'source_table': 'team_invitations',
+            'source_table': 'dietary_meal_sizes',
             'bq_dataset': 'BRONZE',
-            'bq_table': 'raw_client_team_invitations'
+            'bq_table': 'raw_dietary__meal_sizes'
+        },
+        {
+            'source_table': 'dietary_meal_variants  ',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_dietary__meal_variants'
+        },
+        {
+            'source_table': 'dietary_meals',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_dietary__meals'
+        },
+        {
+            'source_table': 'meal_packaging_types',
+            'bq_dataset': 'BRONZE',
+            'bq_table': 'raw_dietary__meal_packaging_types'
         }
+              
         # Add more tables as needed
     ]
     
